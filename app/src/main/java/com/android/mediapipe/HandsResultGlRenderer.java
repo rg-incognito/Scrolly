@@ -1,6 +1,7 @@
 package com.android.mediapipe;
 
 import android.opengl.GLES20;
+import android.os.IBinder;
 import android.util.Log;
 
 import com.google.mediapipe.formats.proto.LandmarkProto.NormalizedLandmark;
@@ -15,6 +16,7 @@ import java.util.List;
 /** A custom implementation of {@link ResultGlRenderer} to render {@link HandsResult}. */
 public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
     private static final String TAG = "HandsResultGlRenderer";
+    GlobalActionBarService globalActionBarService = GlobalActionBarService.getSharedInstance();
 
     private static final float[] LEFT_HAND_CONNECTION_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
     private static final float[] RIGHT_HAND_CONNECTION_COLOR = new float[] {2f, 0.1f, 0.21f, 1f};
@@ -101,6 +103,24 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     landmark1.getX(),
                     landmark1.getY(),
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
+            double d = Math.sqrt(Math.pow(
+                    Double.parseDouble(String.valueOf(landmark.getX()))
+                    - Double.parseDouble(String.valueOf(landmark1.getX())), 2)
+                    + Math.pow(Double.parseDouble(String.valueOf(landmark.getY()))
+                    - Double.parseDouble(String.valueOf(landmark1.getY())),
+                    2));
+            Log.d(TAG, "renderResult dddd : "+d);
+            if (globalActionBarService != null){
+                Log.d("CheckScroll", "renderResult: ");
+
+                if(d <0.02000000d ){
+                    Log.d("CheckScroll", "renderResult: ");
+                    globalActionBarService.configureScrollButton();
+                }
+            }
+            else{
+                Log.d("CheckScroll", "renderResult:Error ");
+            }
             Log.d(TAG, "L1 X-"+landmark.getX()+ "L1 Y"+landmark.getY());
             Log.d(TAG, "L2 X-"+landmark1.getX()+ "L2 Y"+landmark1.getY());
             // Drawing whole hand

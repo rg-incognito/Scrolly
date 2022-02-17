@@ -1,6 +1,8 @@
 package com.android.mediapipe;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.Intent;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -8,6 +10,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class GlobalActionBarService extends AccessibilityService  {
+    private static GlobalActionBarService sSharedInstance;
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
 
@@ -21,7 +25,15 @@ public class GlobalActionBarService extends AccessibilityService  {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-
+        sSharedInstance = this;
+    }
+    @Override
+    public boolean onUnbind(Intent intent) {
+        sSharedInstance = null;
+    return true;
+    }
+    public static GlobalActionBarService getSharedInstance() {
+        return sSharedInstance;
     }
 
 
@@ -44,10 +56,14 @@ public class GlobalActionBarService extends AccessibilityService  {
     }
 
     public void configureScrollButton() {
-
+        Log.d("CheckScroll1", "configureScrollButton: ");
         AccessibilityNodeInfo scrollable = findScorllableNode(getRootInActiveWindow());
-        assert scrollable != null;
-        scrollable.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD.getId());
+        Log.d("CheckScroll1", "configureScrollButton: "+scrollable.isScrollable());
+
+        if (scrollable != null) {
+            scrollable.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD.getId());
+        }
     }
+
 
 }

@@ -1,17 +1,22 @@
 package com.android.mediapipe;
 
 import android.app.PictureInPictureParams;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Rational;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivitykkkkk";
 
     private Hands hands;
+
 
     private static final boolean RUN_ON_GPU = true;
 
@@ -52,36 +58,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupLiveDemoUiComponents();
-//        checkOverlayPermission();
-//        startService();
+        checkOverlayPermission();
 
 
     }
-//    private void touchEventt(){
-//
-//        long downTime = SystemClock.uptimeMillis();
-//        long eventTime = SystemClock.uptimeMillis() + 8000;
-//        int x= this.getResources().getDisplayMetrics().widthPixels;
-//        int y= this.getResources().getDisplayMetrics().heightPixels;
-//
-//// List of meta states found here:     developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
-//        int metaState = 0;
-//        MotionEvent motionEvent = MotionEvent.obtain(
-//                downTime,
-//                eventTime,
-//                MotionEvent.ACTION_SCROLL,
-//                x,
-//                y,
-//                metaState
-//        );
-//
-//
-//// Dispatch touch event to view
-//        MainActivity.this.dispatchTouchEvent(motionEvent);
-//        Log.d("TAG", "touchEventt: sssssssssssssssssssssssss"+ MainActivity.this.dispatchTouchEvent(motionEvent));
-//
-//
-//    }
+
 
     @Override
     protected void onResume() {
@@ -92,9 +73,8 @@ public class MainActivity extends AppCompatActivity {
                     hands.send(textureFrame));
             glSurfaceView.post(this::startCamera);
             glSurfaceView.setVisibility(View.VISIBLE);
-//            touchEventt();
+            Log.d(TAG, "onResume: enterpip");
             enterPIP();
-//            startService();
 
         }
     }
@@ -102,9 +82,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        enterPIP();
-//        touchEventt();
-
         if (inputSource == InputSource.CAMERA) {
 //            glSurfaceView.setVisibility(View.GONE);
 //            cameraInput.close();
@@ -154,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Log.d(TAG, "onBackPressed: enterpip");
+
         enterPIP();
     }
     private void enterPIP(){
@@ -222,15 +201,16 @@ public class MainActivity extends AppCompatActivity {
                 CameraInput.CameraFacing.FRONT,
                 glSurfaceView.getWidth(),
                 glSurfaceView.getHeight());
+        Log.d("camere", "startCamera: "+ glSurfaceView.getWidth());
+        Log.d("camere", "startCamera: "+ glSurfaceView.getHeight());
 
     }
 
     private void stopCurrentPipeline() {
         if (cameraInput != null) {
-            enterPIP();
+
         }
         if (glSurfaceView != null) {
-            enterPIP();
             glSurfaceView.setVisibility(View.GONE);
         }
         if (hands != null) {
@@ -239,78 +219,65 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    private void logWristLandmark(HandsResult result, boolean showPixelValues) {
-//        if (result.multiHandLandmarks().isEmpty()) {
-//            return;
-//        }
-//        LandmarkProto.NormalizedLandmark wristLandmark =
-//                result.multiHandLandmarks().get(0).getLandmarkList().get(HandLandmark.WRIST);
-//        // For Bitmaps, show the pixel values. For texture inputs, show the normalized coordinates.
-//        if (showPixelValues) {
-//            int width = result.inputBitmap().getWidth();
-//            int height = result.inputBitmap().getHeight();
-//            Log.i(
-//                    TAG,
-//                    String.format(
-//                            "MediaPipe Hand wrist coordinates (pixel values): x=%f, y=%f",
-//                            wristLandmark.getX() * width, wristLandmark.getY() * height));
-//        } else {
-//            Log.i(
-//                    TAG,
-//                    String.format(
-//                            "MediaPipe Hand wrist normalized coordinates (value range: [0, 1]): x=%f, y=%f",
-//                            wristLandmark.getX(), wristLandmark.getY()));
-//        }
-//        if (result.multiHandWorldLandmarks().isEmpty()) {
-//            return;
-//        }
-//        LandmarkProto.Landmark wristWorldLandmark =
-//                result.multiHandWorldLandmarks().get(0).getLandmarkList()
-//                        .get(HandLandmark.WRIST);
-//        Log.i(
-//                TAG,
-//                String.format(
-//                        "MediaPipe Hand wrist world coordinates (in meters with the origin at the hand's"
-//                                + " approximate geometric center): x=%f m, y=%f m, z=%f m",
-//                        wristWorldLandmark.getX(), wristWorldLandmark.getY(),
-//                        wristWorldLandmark.getZ()));
-//    }
+    private void logWristLandmark(HandsResult result, boolean showPixelValues) {
+        if (result.multiHandLandmarks().isEmpty()) {
+            return;
+        }
+        LandmarkProto.NormalizedLandmark wristLandmark =
+                result.multiHandLandmarks().get(0).getLandmarkList().get(HandLandmark.WRIST);
+        // For Bitmaps, show the pixel values. For texture inputs, show the normalized coordinates.
+        if (showPixelValues) {
+            int width = result.inputBitmap().getWidth();
+            int height = result.inputBitmap().getHeight();
+            Log.i(
+                    TAG,
+                    String.format(
+                            "MediaPipe Hand wrist coordinates (pixel values): x=%f, y=%f",
+                            wristLandmark.getX() * width, wristLandmark.getY() * height));
+        } else {
+            Log.i(
+                    TAG,
+                    String.format(
+                            "MediaPipe Hand wrist normalized coordinates (value range: [0, 1]): x=%f, y=%f",
+                            wristLandmark.getX(), wristLandmark.getY()));
+        }
+        if (result.multiHandWorldLandmarks().isEmpty()) {
+            return;
+        }
+        LandmarkProto.Landmark wristWorldLandmark =
+                result.multiHandWorldLandmarks().get(0).getLandmarkList()
+                        .get(HandLandmark.WRIST);
+        Log.i(
+                TAG,
+                String.format(
+                        "MediaPipe Hand wrist world coordinates (in meters with the origin at the hand's"
+                                + " approximate geometric center): x=%f m, y=%f m, z=%f m",
+                        wristWorldLandmark.getX(), wristWorldLandmark.getY(),
+                        wristWorldLandmark.getZ()));
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
-    }
-//    public void startService(){
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            // check if the user has already granted
-//            // the Draw over other apps permission
-//            if(Settings.canDrawOverlays(this)) {
-//                Log.d("TAG", "startService: ");
-//                // start the service based on the android version
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    startForegroundService(new Intent(this, ForegroundService.class));
-//                } else {
-//                    startService(new Intent(this, ForegroundService.class));
-//                }
-//            }
-//        }else{
-//            Log.d("TAG", "startService: ");
-//
-//            startService(new Intent(this, ForegroundService.class));
-//        }
-//    }
-//
-//    // method to ask user to grant the Overlay permission
-//    public void checkOverlayPermission(){
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (!Settings.canDrawOverlays(this)) {
-//                // send user to the device settings
-//                Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-//                startActivity(myIntent);
-//            }
-//        }
-//    }
 
+    }
+
+    public void checkOverlayPermission(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 0);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0 && resultCode == RESULT_OK){
+            Toast.makeText(this, "Granted ", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
