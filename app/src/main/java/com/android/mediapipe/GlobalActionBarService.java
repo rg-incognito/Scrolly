@@ -1,10 +1,15 @@
 package com.android.mediapipe;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -42,7 +47,9 @@ public class GlobalActionBarService extends AccessibilityService  {
         deque.add(root);
         while (!deque.isEmpty()) {
             AccessibilityNodeInfo node = deque.removeFirst();
-            if (node.getActionList().contains(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD)) {
+            if (node.getActionList().contains(AccessibilityNodeInfo
+                    .AccessibilityAction
+                    .ACTION_SCROLL_FORWARD)) {
                 return node;
             }
 
@@ -58,11 +65,17 @@ public class GlobalActionBarService extends AccessibilityService  {
     public void configureScrollButton() {
         Log.d("CheckScroll1", "configureScrollButton: ");
         AccessibilityNodeInfo scrollable = findScorllableNode(getRootInActiveWindow());
-        Log.d("CheckScroll1", "configureScrollButton: "+scrollable.isScrollable());
-
-        if (scrollable != null) {
-            scrollable.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD.getId());
+        if (scrollable != null && scrollable.isScrollable()) {
+            scrollable
+                    .performAction(AccessibilityNodeInfo
+                            .AccessibilityAction
+                            .ACTION_SCROLL_FORWARD
+                            .getId());
         }
+
+    }
+    public void test(){
+        Log.d("testt", "test: ");
     }
 
 

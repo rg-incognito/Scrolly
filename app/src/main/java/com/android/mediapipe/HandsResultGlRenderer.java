@@ -103,18 +103,24 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     landmark1.getX(),
                     landmark1.getY(),
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
-            double d = Math.sqrt(Math.pow(
-                    Double.parseDouble(String.valueOf(landmark.getX()))
-                    - Double.parseDouble(String.valueOf(landmark1.getX())), 2)
-                    + Math.pow(Double.parseDouble(String.valueOf(landmark.getY()))
-                    - Double.parseDouble(String.valueOf(landmark1.getY())),
-                    2));
-            Log.d(TAG, "renderResult dddd : "+d);
-            if (globalActionBarService != null){
-                Log.d("CheckScroll", "renderResult: ");
+//            double d = Math.sqrt(Math.pow(
+//                    Double.parseDouble(String.valueOf(landmark.getX()))
+//                    - Double.parseDouble(String.valueOf(landmark1.getX())), 2)
+//                    + Math.pow(Double.parseDouble(String.valueOf(landmark.getY()))
+//                    - Double.parseDouble(String.valueOf(landmark1.getY())),
+//                    2));
 
-                if(d <0.02000000d ){
-                    Log.d("CheckScroll", "renderResult: ");
+            double d = Math.sqrt(Math.pow(landmark.getX()- landmark1.getX(),2)
+                    +Math.pow(landmark.getY()- landmark1.getY(),2)
+                    +Math.pow(landmark.getZ()- landmark1.getZ(),2));
+
+            Log.d(TAG, "renderResult dddd : "+d +"  "+ globalActionBarService.toString());
+            globalActionBarService.test();
+            if (globalActionBarService != null){
+                Log.d("CheckScroll", "renderResult: "+ (d < 0.050906282163080734));
+
+                if(d < 0.050906282163080734 ){
+                    Log.d("CheckScroll", "renderResultkkkkkkkkk: ");
                     globalActionBarService.configureScrollButton();
                 }
             }
