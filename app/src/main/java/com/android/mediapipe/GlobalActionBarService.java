@@ -34,7 +34,6 @@ public class GlobalActionBarService extends AccessibilityService  {
     }
     @Override
     public boolean onUnbind(Intent intent) {
-        sSharedInstance = null;
     return true;
     }
     public static GlobalActionBarService getSharedInstance() {
@@ -74,9 +73,7 @@ public class GlobalActionBarService extends AccessibilityService  {
         }
 
     }
-    public void test(){
-        Log.d("testt", "test: ");
-    }
+
 
 
 }

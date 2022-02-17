@@ -114,8 +114,7 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     +Math.pow(landmark.getY()- landmark1.getY(),2)
                     +Math.pow(landmark.getZ()- landmark1.getZ(),2));
 
-            Log.d(TAG, "renderResult dddd : "+d +"  "+ globalActionBarService.toString());
-            globalActionBarService.test();
+
             if (globalActionBarService != null){
                 Log.d("CheckScroll", "renderResult: "+ (d < 0.050906282163080734));
 
