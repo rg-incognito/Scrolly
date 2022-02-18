@@ -149,12 +149,13 @@ public class MainActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     Log.d(TAG, "enterPIP: ssssss");
                     setPictureInPictureParams(new PictureInPictureParams.Builder()
-                            .setAspectRatio(Rational.NaN)
+                            .setAspectRatio(Rational.ZERO)
                             .setAutoEnterEnabled(false)
                             .build());
                 }
             }
             this.enterPictureInPictureMode();
+
         }
     }
 

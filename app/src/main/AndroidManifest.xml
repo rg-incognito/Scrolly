@@ -22,9 +22,7 @@
         android:allowBackup="false">
 
 
-        <activity
-            android:name=".OnlyBackCamera"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"

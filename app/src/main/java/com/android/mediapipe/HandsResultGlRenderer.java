@@ -1,7 +1,6 @@
 package com.android.mediapipe;
 
 import android.opengl.GLES20;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.google.mediapipe.formats.proto.LandmarkProto.NormalizedLandmark;
@@ -103,6 +102,18 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     landmark1.getX(),
                     landmark1.getY(),
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
+
+            //for thumb points
+            NormalizedLandmark landmark2 =  result.multiHandLandmarks().get(i).getLandmarkList().get(4);
+            drawCircle(
+                    landmark2.getX(),
+                    landmark2.getY(),
+                    isLeftHand ? LEFT_HAND_LANDMARK_COLOR : RIGHT_HAND_LANDMARK_COLOR);
+
+            drawHollowCircle(
+                    landmark2.getX(),
+                    landmark2.getY(),
+                    isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
 //            double d = Math.sqrt(Math.pow(
 //                    Double.parseDouble(String.valueOf(landmark.getX()))
 //                    - Double.parseDouble(String.valueOf(landmark1.getX())), 2)
@@ -113,21 +124,34 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
             double d = Math.sqrt(Math.pow(landmark.getX()- landmark1.getX(),2)
                     +Math.pow(landmark.getY()- landmark1.getY(),2)
                     +Math.pow(landmark.getZ()- landmark1.getZ(),2));
+            double forfingerToThumb = Math.sqrt(Math.pow(landmark.getX()- landmark2.getX(),2)
+                    +Math.pow(landmark.getY()- landmark2.getY(),2)
+                    +Math.pow(landmark.getZ()- landmark2.getZ(),2));
+
+            double middlefingerToThumb = Math.sqrt(Math.pow(landmark1.getX()- landmark2.getX(),2)
+                    +Math.pow(landmark1.getY()- landmark2.getY(),2)
+                    +Math.pow(landmark1.getZ()- landmark2.getZ(),2));
 
 
             if (globalActionBarService != null){
                 Log.d("CheckScroll", "renderResult: "+ (d < 0.050906282163080734));
 
-                if(d < 0.050906282163080734 ){
+                if(forfingerToThumb < 0.050906282163080734 ){
                     Log.d("CheckScroll", "renderResultkkkkkkkkk: ");
-                    globalActionBarService.configureScrollButton();
+                    globalActionBarService.configureScrollButtonUp();
+                }
+                if(middlefingerToThumb < 0.050906282163080734 ){
+                    Log.d("CheckScroll", "renderResultkkkkkkkkk: ");
+                    globalActionBarService.configureScrollButtonDown();
                 }
             }
             else{
+                globalActionBarService = new GlobalActionBarService();
                 Log.d("CheckScroll", "renderResult:Error ");
             }
             Log.d(TAG, "L1 X-"+landmark.getX()+ "L1 Y"+landmark.getY());
             Log.d(TAG, "L2 X-"+landmark1.getX()+ "L2 Y"+landmark1.getY());
+            Log.d(TAG, "L2 X-"+landmark2.getX()+ "L2 Y"+landmark2.getY());
             // Drawing whole hand
 //            drawConnections(
 //                    result.multiHandLandmarks().get(i).getLandmarkList(),
