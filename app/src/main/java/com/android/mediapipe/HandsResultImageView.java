@@ -55,7 +55,6 @@ public class HandsResultImageView extends AppCompatImageView {
         }
     }
 
-    /** Updates the image view with the latest {@link HandsResult}. */
     public void update() {
         postInvalidate();
         if (latest != null) {

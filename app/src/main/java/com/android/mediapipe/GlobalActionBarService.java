@@ -1,25 +1,27 @@
 package com.android.mediapipe;
 
 import android.accessibilityservice.AccessibilityService;
-import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class GlobalActionBarService extends AccessibilityService {
     private static GlobalActionBarService sSharedInstance;
-
     @Override
     public void onRebind(Intent intent) {
         super.onRebind(intent);
@@ -27,13 +29,7 @@ public class GlobalActionBarService extends AccessibilityService {
         sSharedInstance = this;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        disableSelf();
 
-    }
 
 
     @Override
@@ -43,7 +39,9 @@ public class GlobalActionBarService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            disableSelf();
+        }
     }
 
     @Override
@@ -154,4 +152,6 @@ public class GlobalActionBarService extends AccessibilityService {
 //
 //
 //    }
+
+
 }

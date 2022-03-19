@@ -1,6 +1,5 @@
 package com.android.mediapipe;
 
-import android.accessibilityservice.AccessibilityService;
 import android.app.PictureInPictureParams;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +12,6 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.Rational;
 import android.view.View;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -32,8 +30,6 @@ import com.google.mediapipe.solutions.hands.HandsResult;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivitykkkkk";
@@ -121,15 +117,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupLiveDemoUiComponents() {
-        Button startCameraButton = findViewById(R.id.button_start_camera);
-        startCameraButton.setOnClickListener(
-                v -> {
+
+
                     if (inputSource == InputSource.CAMERA) {
                         return;
                     }
                     stopCurrentPipeline();
                     setupStreamingModePipeline(InputSource.CAMERA);
-                });
+
     }
 
     @Override
@@ -302,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Granted ", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 }
