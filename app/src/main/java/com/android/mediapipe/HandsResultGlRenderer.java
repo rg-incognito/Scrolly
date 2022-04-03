@@ -3,37 +3,35 @@ package com.android.mediapipe;
 import android.opengl.GLES20;
 import android.util.Log;
 
-import com.google.mediapipe.formats.proto.LandmarkProto.NormalizedLandmark;
+import com.google.mediapipe.formats.proto.LandmarkProto;
 import com.google.mediapipe.solutioncore.ResultGlRenderer;
-import com.google.mediapipe.solutions.hands.Hands;
 import com.google.mediapipe.solutions.hands.HandsResult;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.List;
 
-/** A custom implementation of {@link ResultGlRenderer} to render {@link HandsResult}. */
-public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
-    private static final String TAG = "HandsResultGlRenderer";
+public  class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
+    private  final String TAG = "Hands  ResultGlRenderer";
     GlobalActionBarService globalActionBarService = GlobalActionBarService.getSharedInstance();
 
-    private static final float[] LEFT_HAND_CONNECTION_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
-    private static final float[] RIGHT_HAND_CONNECTION_COLOR = new float[] {2f, 0.1f, 0.21f, 1f};
-    private static final float CONNECTION_THICKNESS = 20.0f;
-    private static final float[] LEFT_HAND_HOLLOW_CIRCLE_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
-    private static final float[] RIGHT_HAND_HOLLOW_CIRCLE_COLOR = new float[] {1f, 0.2f, 0.2f, 1f};
-    private static final float HOLLOW_CIRCLE_RADIUS = 0.01f;
-    private static final float[] LEFT_HAND_LANDMARK_COLOR = new float[] {1f, 0.2f, 0.2f, 1f};
-    private static final float[] RIGHT_HAND_LANDMARK_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
-    private static final float LANDMARK_RADIUS = 0.008f;
-    private static final int NUM_SEGMENTS = 120;
-    private static final String VERTEX_SHADER =
+    private  final float[] LEFT_HAND_CONNECTION_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
+    private  final float[] RIGHT_HAND_CONNECTION_COLOR = new float[] {2f, 0.1f, 0.21f, 1f};
+    private  final float CONNECTION_THICKNESS = 20.0f;
+    private  final float[] LEFT_HAND_HOLLOW_CIRCLE_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
+    private  final float[] RIGHT_HAND_HOLLOW_CIRCLE_COLOR = new float[] {1f, 0.2f, 0.2f, 1f};
+    private  final float HOLLOW_CIRCLE_RADIUS = 0.01f;
+    private  final float[] LEFT_HAND_LANDMARK_COLOR = new float[] {1f, 0.2f, 0.2f, 1f};
+    private  final float[] RIGHT_HAND_LANDMARK_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
+    private  final float LANDMARK_RADIUS = 0.008f;
+    private  final int NUM_SEGMENTS = 120;
+    private  final String VERTEX_SHADER =
             "uniform mat4 uProjectionMatrix;\n"
                     + "attribute vec4 vPosition;\n"
                     + "void main() {\n"
                     + "  gl_Position = uProjectionMatrix * vPosition;\n"
                     + "}";
-    private static final String FRAGMENT_SHADER =
+    private  final String FRAGMENT_SHADER =
             "precision mediump float;\n"
                     + "uniform vec4 uColor;\n"
                     + "void main() {\n"
@@ -80,19 +78,19 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
 
 
             // Drawing single finger forefinger
-            NormalizedLandmark landmark =  result.multiHandLandmarks().get(i).getLandmarkList().get(8);
+            LandmarkProto.NormalizedLandmark landmark =  result.multiHandLandmarks().get(i).getLandmarkList().get(8);
             drawCircle(
-                        landmark.getX(),
-                        landmark.getY(),
-                        isLeftHand ? LEFT_HAND_LANDMARK_COLOR : RIGHT_HAND_LANDMARK_COLOR);
+                    landmark.getX(),
+                    landmark.getY(),
+                    isLeftHand ? LEFT_HAND_LANDMARK_COLOR : RIGHT_HAND_LANDMARK_COLOR);
 
             drawHollowCircle(
-                        landmark.getX(),
-                        landmark.getY(),
-                        isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
+                    landmark.getX(),
+                    landmark.getY(),
+                    isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
 
             // for middle finger
-            NormalizedLandmark landmark1 =  result.multiHandLandmarks().get(i).getLandmarkList().get(12);
+            LandmarkProto.NormalizedLandmark landmark1 =  result.multiHandLandmarks().get(i).getLandmarkList().get(12);
             drawCircle(
                     landmark1.getX(),
                     landmark1.getY(),
@@ -104,7 +102,7 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
 
             //for thumb points
-            NormalizedLandmark landmark2 =  result.multiHandLandmarks().get(i).getLandmarkList().get(4);
+            LandmarkProto.NormalizedLandmark landmark2 =  result.multiHandLandmarks().get(i).getLandmarkList().get(4);
             drawCircle(
                     landmark2.getX(),
                     landmark2.getY(),
@@ -114,12 +112,7 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     landmark2.getX(),
                     landmark2.getY(),
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
-//            double d = Math.sqrt(Math.pow(
-//                    Double.parseDouble(String.valueOf(landmark.getX()))
-//                    - Double.parseDouble(String.valueOf(landmark1.getX())), 2)
-//                    + Math.pow(Double.parseDouble(String.valueOf(landmark.getY()))
-//                    - Double.parseDouble(String.valueOf(landmark1.getY())),
-//                    2));
+
 
             double d = Math.sqrt(Math.pow(landmark.getX()- landmark1.getX(),2)
                     +Math.pow(landmark.getY()- landmark1.getY(),2)
@@ -152,51 +145,7 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
             Log.d(TAG, "L1 X-"+landmark.getX()+ "L1 Y"+landmark.getY());
             Log.d(TAG, "L2 X-"+landmark1.getX()+ "L2 Y"+landmark1.getY());
             Log.d(TAG, "L2 X-"+landmark2.getX()+ "L2 Y"+landmark2.getY());
-            // Drawing whole hand
-//            drawConnections(
-//                    result.multiHandLandmarks().get(i).getLandmarkList(),
-//                    isLeftHand ? LEFT_HAND_CONNECTION_COLOR : RIGHT_HAND_CONNECTION_COLOR);
 
-//            for (NormalizedLandmark landmark : result.multiHandLandmarks().get(i).getLandmarkList()) {
-//
-//                // Draws the landmark.
-//                drawCircle(
-//                        landmark.getX(),
-//                        landmark.getY(),
-//                        isLeftHand ? LEFT_HAND_LANDMARK_COLOR : RIGHT_HAND_LANDMARK_COLOR);
-//                // Draws a hollow circle around the landmark.
-//                drawHollowCircle(
-//                        landmark.getX(),
-//                        landmark.getY(),
-//                        isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
-//            }
-        }
-    }
-
-    /**
-     * Deletes the shader program.
-     *
-     * <p>This is only necessary if one wants to release the program while keeping the context around.
-     */
-    public void release() {
-        GLES20.glDeleteProgram(program);
-    }
-
-    private void drawConnections(List<NormalizedLandmark> handLandmarkList, float[] colorArray) {
-        GLES20.glUniform4fv(colorHandle, 1, colorArray, 0);
-        for (Hands.Connection c : Hands.HAND_CONNECTIONS) {
-            NormalizedLandmark start = handLandmarkList.get(c.start());
-            NormalizedLandmark end = handLandmarkList.get(c.end());
-            float[] vertex = {start.getX(), start.getY(), end.getX(), end.getY()};
-            FloatBuffer vertexBuffer =
-                    ByteBuffer.allocateDirect(vertex.length * 4)
-                            .order(ByteOrder.nativeOrder())
-                            .asFloatBuffer()
-                            .put(vertex);
-            vertexBuffer.position(0);
-            GLES20.glEnableVertexAttribArray(positionHandle);
-            GLES20.glVertexAttribPointer(positionHandle, 2, GLES20.GL_FLOAT, false, 0, vertexBuffer);
-            GLES20.glDrawArrays(GLES20.GL_LINES, 0, 2);
         }
     }
 
@@ -247,3 +196,6 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
         GLES20.glDrawArrays(GLES20.GL_LINE_STRIP, 0, vertexCount);
     }
 }
+
+
+

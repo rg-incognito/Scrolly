@@ -6,26 +6,27 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+
 import androidx.appcompat.widget.AppCompatImageView;
+
 import com.google.mediapipe.formats.proto.LandmarkProto;
-import com.google.mediapipe.formats.proto.LandmarkProto.NormalizedLandmark;
 import com.google.mediapipe.solutions.hands.Hands;
 import com.google.mediapipe.solutions.hands.HandsResult;
+
 import java.util.List;
 
-/** An ImageView implementation for displaying {@link HandsResult}. */
-public class HandsResultImageView extends AppCompatImageView {
-    private static final String TAG = "HandsResultImageView";
+public  class HandsResultImageView extends AppCompatImageView {
+    private final String TAG = "HandsResultImageView";
 
-    private static final int LEFT_HAND_CONNECTION_COLOR = Color.parseColor("#30FF30");
-    private static final int RIGHT_HAND_CONNECTION_COLOR = Color.parseColor("#FF3030");
-    private static final int CONNECTION_THICKNESS = 8; // Pixels
-    private static final int LEFT_HAND_HOLLOW_CIRCLE_COLOR = Color.parseColor("#30FF30");
-    private static final int RIGHT_HAND_HOLLOW_CIRCLE_COLOR = Color.parseColor("#FF3030");
-    private static final int HOLLOW_CIRCLE_WIDTH = 5; // Pixels
-    private static final int LEFT_HAND_LANDMARK_COLOR = Color.parseColor("#FF3030");
-    private static final int RIGHT_HAND_LANDMARK_COLOR = Color.parseColor("#30FF30");
-    private static final int LANDMARK_RADIUS = 10; // Pixels
+    private  final int LEFT_HAND_CONNECTION_COLOR = Color.parseColor("#30FF30");
+    private  final int RIGHT_HAND_CONNECTION_COLOR = Color.parseColor("#FF3030");
+    private  final int CONNECTION_THICKNESS = 8; // Pixels
+    private  final int LEFT_HAND_HOLLOW_CIRCLE_COLOR = Color.parseColor("#30FF30");
+    private  final int RIGHT_HAND_HOLLOW_CIRCLE_COLOR = Color.parseColor("#FF3030");
+    private  final int HOLLOW_CIRCLE_WIDTH = 5; // Pixels
+    private  final int LEFT_HAND_LANDMARK_COLOR = Color.parseColor("#FF3030");
+    private  final int RIGHT_HAND_LANDMARK_COLOR = Color.parseColor("#30FF30");
+    private  final int LANDMARK_RADIUS = 10; // Pixels
     private Bitmap latest;
 
     public HandsResultImageView(Context context) {
@@ -63,7 +64,7 @@ public class HandsResultImageView extends AppCompatImageView {
     }
 
     private void drawLandmarksOnCanvas(
-            List<NormalizedLandmark> handLandmarkList,
+            List<LandmarkProto.NormalizedLandmark> handLandmarkList,
             boolean isLeftHand,
             Canvas canvas,
             int width,
@@ -74,8 +75,8 @@ public class HandsResultImageView extends AppCompatImageView {
             connectionPaint.setColor(
                     isLeftHand ? LEFT_HAND_CONNECTION_COLOR : RIGHT_HAND_CONNECTION_COLOR);
             connectionPaint.setStrokeWidth(CONNECTION_THICKNESS);
-            NormalizedLandmark start = handLandmarkList.get(c.start());
-            NormalizedLandmark end = handLandmarkList.get(c.end());
+            LandmarkProto.NormalizedLandmark start = handLandmarkList.get(c.start());
+            LandmarkProto.NormalizedLandmark end = handLandmarkList.get(c.end());
             canvas.drawLine(
                     start.getX() * width,
                     start.getY() * height,

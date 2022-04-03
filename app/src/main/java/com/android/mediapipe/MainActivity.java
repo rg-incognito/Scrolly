@@ -1,18 +1,14 @@
 package com.android.mediapipe;
 
-import android.app.PictureInPictureParams;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.util.Rational;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupLiveDemoUiComponents();
-        checkOverlayPermission();
+//        checkOverlayPermission();
 
 
     }
@@ -74,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
             glSurfaceView.post(this::startCamera);
             glSurfaceView.setVisibility(View.VISIBLE);
             Log.d(TAG, "onResume: enterpip");
-            enterPIP();
 
         }
     }
@@ -118,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupLiveDemoUiComponents() {
 
-
                     if (inputSource == InputSource.CAMERA) {
                         return;
                     }
@@ -132,27 +126,26 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
         Log.d(TAG, "onBackPressed: enterpip");
 
-        enterPIP();
     }
-    private void enterPIP(){
-        Log.d(TAG, "enterPIP: ");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.d(TAG, "enterPIP: nnnnnn");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Log.d(TAG, "enterPIP: ooooooooooo");
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    Log.d(TAG, "enterPIP: ssssss");
-                    setPictureInPictureParams(new PictureInPictureParams.Builder()
-                            .setAspectRatio(Rational.ZERO)
-                            .setAutoEnterEnabled(false)
-                            .build());
-                }
-            }
-            this.enterPictureInPictureMode();
-
-        }
-    }
+//    private void enterPIP(){
+//        Log.d(TAG, "enterPIP: ");
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            Log.d(TAG, "enterPIP: nnnnnn");
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                Log.d(TAG, "enterPIP: ooooooooooo");
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                    Log.d(TAG, "enterPIP: ssssss");
+//                    setPictureInPictureParams(new PictureInPictureParams.Builder()
+//                            .setAspectRatio(Rational.ZERO)
+//                            .setAutoEnterEnabled(false)
+//                            .build());
+//                }
+//            }
+//            this.enterPictureInPictureMode();
+//
+//        }
+//    }
 
 
     private void setupStreamingModePipeline(InputSource inputSource) {
@@ -275,20 +268,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
 
+
     }
 
-    public void checkOverlayPermission(){
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 0);
-            }
-        }
-    }
+//    public void checkOverlayPermission(){
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (!Settings.canDrawOverlays(this)) {
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+//                startActivityForResult(intent, 0);
+//            }
+//        }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -297,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Granted ", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
 }

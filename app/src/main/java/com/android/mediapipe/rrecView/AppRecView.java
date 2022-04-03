@@ -1,8 +1,7 @@
-package com.android.mediapipe;
+package com.android.mediapipe.rrecView;
 
 import android.app.Activity;
 import android.app.PictureInPictureParams;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
@@ -15,6 +14,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.mediapipe.FirstPageActivity;
+import com.android.mediapipe.MainActivity;
+import com.android.mediapipe.R;
+import com.android.mediapipe.model.App;
 
 import java.util.ArrayList;
 
@@ -43,7 +47,7 @@ public class AppRecView extends RecyclerView.Adapter<AppRecView.AppViewHolder> {
         Log.d(TAG, "onBindViewHolder: "+applist.get(position).packageName);
         holder.tv.setOnClickListener(view -> {
             enterPIP();
-            context.startActivity(new Intent(context,MainActivity.class));
+            context.startActivity(new Intent(context, MainActivity.class));
 
 
             Log.d(TAG, "onBindViewHolder: integt trigerr");

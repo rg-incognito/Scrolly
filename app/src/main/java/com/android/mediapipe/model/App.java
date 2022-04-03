@@ -1,11 +1,11 @@
-package com.android.mediapipe;
+package com.android.mediapipe.model;
 
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
 public class App {
-    Intent i;
+    public Intent i;
 
     public App(Intent i, String packageName) {
         this.i = i;
@@ -37,5 +37,5 @@ public class App {
         this.packageName = packageName;
     }
 
-    String packageName;
+    public String packageName;
 }

@@ -6,19 +6,37 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.opengl.GLES20;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.NotificationCompat;
 
+import com.google.mediapipe.formats.proto.LandmarkProto;
+import com.google.mediapipe.solutioncore.ResultGlRenderer;
+import com.google.mediapipe.solutions.hands.Hands;
+import com.google.mediapipe.solutions.hands.HandsResult;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 
 public class GlobalActionBarService extends AccessibilityService {
     private static GlobalActionBarService sSharedInstance;
@@ -62,6 +80,7 @@ public class GlobalActionBarService extends AccessibilityService {
 
 
     private AccessibilityNodeInfo findScorllableNode(AccessibilityNodeInfo root) {
+
         Deque<AccessibilityNodeInfo> deque = new ArrayDeque<>();
         deque.add(root);
         while (!deque.isEmpty()) {
@@ -81,29 +100,11 @@ public class GlobalActionBarService extends AccessibilityService {
 
     }
 
-//    private AccessibilityNodeInfo findDobleTapNode(AccessibilityNodeInfo root) {
-//        Deque<AccessibilityNodeInfo> deque = new ArrayDeque<>();
-//        deque.add(root);
-//        while (!deque.isEmpty()) {
-//            AccessibilityNodeInfo node = deque.removeFirst();
-//            if (node.getActionList().contains(AccessibilityNodeInfo
-//                    .AccessibilityAction
-//                    .ACTION_SCROLL_BACKWARD)) {
-//                return node;
-//            }
-//
-//            for (int i = 0; i < node.getChildCount(); i++) {
-//                deque.addLast(node.getChild(i));
-//            }
-//
-//        }
-//        return null;
-//
-//    }
-
     public void configureScrollButtonUp() {
-        Log.d("CheckScroll1", "configureScrollButton: ");
+        Log.d("CheckScroooo", "configureScrollButton: "+getRootInActiveWindow());
+
         AccessibilityNodeInfo scrollable = findScorllableNode(getRootInActiveWindow());
+
         if (scrollable != null && scrollable.isScrollable()) {
             scrollable
                     .performAction(AccessibilityNodeInfo
@@ -116,7 +117,7 @@ public class GlobalActionBarService extends AccessibilityService {
     }
 
     public void configureScrollButtonDown() {
-        Log.d("CheckScroll1", "configureScrollButton: ");
+        Log.d("CheckScroooo", "configureScrollButton: "+getRootInActiveWindow());
         AccessibilityNodeInfo scrollable = findScorllableNode(getRootInActiveWindow());
         if (scrollable != null && scrollable.isScrollable()) {
             scrollable
@@ -127,6 +128,7 @@ public class GlobalActionBarService extends AccessibilityService {
         }
 
     }
+
 
 //
 //    public void configureDoubleTap() {
@@ -152,6 +154,10 @@ public class GlobalActionBarService extends AccessibilityService {
 //
 //
 //    }
+
+
+
+
 
 
 }
