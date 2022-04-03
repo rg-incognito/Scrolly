@@ -17,6 +17,10 @@ import androidx.core.app.NotificationCompat
 import java.io.FileDescriptor
 import java.io.PrintWriter
 import java.util.*
+import javax.inject.Singleton
+
+
+
 
 class SmartAutoClickerService : AccessibilityService() {
 
@@ -37,11 +41,13 @@ class SmartAutoClickerService : AccessibilityService() {
                 field = value
                 value?.invoke(LOCAL_SERVICE_INSTANCE)
             }
-
-
         fun getLocalService(stateCallback: ((LocalService?) -> Unit)?) {
-            LOCAL_SERVICE_CALLBACK = stateCallback
+                    LOCAL_SERVICE_CALLBACK = stateCallback
         }
+        fun getLocalServiceInstance(): LocalService? {
+            return LOCAL_SERVICE_INSTANCE
+        }
+
     }
 
 
@@ -49,6 +55,7 @@ class SmartAutoClickerService : AccessibilityService() {
 
     /** Local interface providing an API for the [SmartAutoClickerService]. */
     inner class LocalService {
+
         private fun findScorllableNode(root: AccessibilityNodeInfo): AccessibilityNodeInfo? {
             val deque: Deque<AccessibilityNodeInfo> = ArrayDeque()
             deque.add(root)
@@ -90,12 +97,13 @@ class SmartAutoClickerService : AccessibilityService() {
 
 
         @RequiresApi(Build.VERSION_CODES.M)
-        fun start(resultCode: Int, data: Intent) {
+        fun start() {
             if (isStarted) {
                 return
             }
 
             isStarted = true
+            Log.d("rrgg", "start: forground")
             startForeground(NOTIFICATION_ID, createNotification("Mediapipe"))
 
 //            detectorEngine = DetectorEngine.getDetectorEngine(this@SmartAutoClickerService).apply {

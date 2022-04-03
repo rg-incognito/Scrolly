@@ -1,7 +1,10 @@
 package com.android.mediapipe;
 
 import android.opengl.GLES20;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.google.mediapipe.formats.proto.LandmarkProto;
 import com.google.mediapipe.solutioncore.ResultGlRenderer;
@@ -13,7 +16,9 @@ import java.nio.FloatBuffer;
 
 public  class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
     private  final String TAG = "Hands  ResultGlRenderer";
-    GlobalActionBarService globalActionBarService = GlobalActionBarService.getSharedInstance();
+//    GlobalActionBarService globalActionBarService = GlobalActionBarService.getSharedInstance();
+    SmartAutoClickerService.LocalService localService =
+            SmartAutoClickerService.Companion.getLocalServiceInstance();
 
     private  final float[] LEFT_HAND_CONNECTION_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
     private  final float[] RIGHT_HAND_CONNECTION_COLOR = new float[] {2f, 0.1f, 0.21f, 1f};
@@ -62,6 +67,7 @@ public  class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
         colorHandle = GLES20.glGetUniformLocation(program, "uColor");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void renderResult(HandsResult result, float[] projectionMatrix) {
         if (result == null) {
@@ -125,21 +131,24 @@ public  class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     +Math.pow(landmark1.getY()- landmark2.getY(),2)
                     +Math.pow(landmark1.getZ()- landmark2.getZ(),2));
 
-
-            if (globalActionBarService != null){
+            localService.start();
+            if (localService != null){
                 Log.d("CheckScroll", "renderResult: "+ (d < 0.050906282163080734));
 
                 if(forfingerToThumb < 0.050906282163080734 ){
                     Log.d("CheckScroll", "renderResultkkkkkkkkk: ");
-                    globalActionBarService.configureScrollButtonUp();
+//                    globalActionBarService.configureScrollButtonUp();
+                    localService.configureScrollButtonUp();
                 }
                 if(middlefingerToThumb < 0.050906282163080734 ){
                     Log.d("CheckScroll", "renderResultkkkkkkkkk: ");
-                    globalActionBarService.configureScrollButtonDown();
+//                    globalActionBarService.configureScrollButtonDown();
+                    localService.configureScrollButtonDown();
+
                 }
             }
             else{
-                globalActionBarService = new GlobalActionBarService();
+//                globalActionBarService = new GlobalActionBarService();
                 Log.d("CheckScroll", "renderResult:Error ");
             }
             Log.d(TAG, "L1 X-"+landmark.getX()+ "L1 Y"+landmark.getY());
