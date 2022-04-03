@@ -49,7 +49,6 @@ public class AppRecView extends RecyclerView.Adapter<AppRecView.AppViewHolder> {
             enterPIP();
             context.startActivity(new Intent(context, MainActivity.class));
 
-
             Log.d(TAG, "onBindViewHolder: integt trigerr");
             context.startActivity(applist.get(position).i);
 

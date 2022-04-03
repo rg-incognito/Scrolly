@@ -39,7 +39,7 @@
         </activity>
 
         <service
-            android:name=".SmartAutoClickerService"
+            android:name=".service.SmartAutoClickerService"
             android:exported="false"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
             <intent-filter>

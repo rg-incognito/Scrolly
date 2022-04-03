@@ -6,7 +6,6 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.mediapipe.service.SmartAutoClickerService;
+import com.android.mediapipe.utils.HandsResultGlRenderer;
 import com.google.mediapipe.formats.proto.LandmarkProto;
 import com.google.mediapipe.solutioncore.CameraInput;
 import com.google.mediapipe.solutioncore.SolutionGlSurfaceView;
@@ -29,7 +30,8 @@ import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivitykkkkk";
-
+    SmartAutoClickerService.LocalService localService =
+            SmartAutoClickerService.Companion.getLocalServiceInstance();
     private Hands hands;
 
 
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        localService.start();
         setupLiveDemoUiComponents();
 //        checkOverlayPermission();
 
@@ -69,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                     hands.send(textureFrame));
             glSurfaceView.post(this::startCamera);
             glSurfaceView.setVisibility(View.VISIBLE);
-            Log.d(TAG, "onResume: enterpip");
 
         }
     }

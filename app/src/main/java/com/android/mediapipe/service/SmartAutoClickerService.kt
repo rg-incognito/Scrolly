@@ -1,4 +1,5 @@
-package com.android.mediapipe
+package com.android.mediapipe.service
+
 import android.accessibilityservice.AccessibilityService
 import android.app.Notification
 import android.app.NotificationChannel
@@ -12,38 +13,43 @@ import android.view.accessibility.AccessibilityNodeInfo
 import androidx.annotation.RequiresApi
 
 import androidx.core.app.NotificationCompat
+import com.android.mediapipe.FirstPageActivity
+import com.android.mediapipe.R
 
 
 import java.io.FileDescriptor
 import java.io.PrintWriter
 import java.util.*
-import javax.inject.Singleton
-
-
 
 
 class SmartAutoClickerService : AccessibilityService() {
 
     companion object {
+        var upscroll = 60;
+        var downscroll = 60;
         /** The identifier for the foreground notification of this service. */
         private const val NOTIFICATION_ID = 42
+
         /** The channel identifier for the foreground notification of this service. */
         private const val NOTIFICATION_CHANNEL_ID = "SmartAutoClickerService"
+
         /** The instance of the [LocalService], providing access for this service to the Activity. */
         private var LOCAL_SERVICE_INSTANCE: LocalService? = null
             set(value) {
                 field = value
                 LOCAL_SERVICE_CALLBACK?.invoke(field)
             }
+
         /** Callback upon the availability of the [LOCAL_SERVICE_INSTANCE]. */
         private var LOCAL_SERVICE_CALLBACK: ((LocalService?) -> Unit)? = null
             set(value) {
                 field = value
                 value?.invoke(LOCAL_SERVICE_INSTANCE)
             }
-        fun getLocalService(stateCallback: ((LocalService?) -> Unit)?) {
-                    LOCAL_SERVICE_CALLBACK = stateCallback
-        }
+
+        //        fun getLocalService(stateCallback: ((LocalService?) -> Unit)?) {
+//                    LOCAL_SERVICE_CALLBACK = stateCallback
+//        }
         fun getLocalServiceInstance(): LocalService? {
             return LOCAL_SERVICE_INSTANCE
         }
@@ -55,6 +61,7 @@ class SmartAutoClickerService : AccessibilityService() {
 
     /** Local interface providing an API for the [SmartAutoClickerService]. */
     inner class LocalService {
+
 
         private fun findScorllableNode(root: AccessibilityNodeInfo): AccessibilityNodeInfo? {
             val deque: Deque<AccessibilityNodeInfo> = ArrayDeque()
@@ -72,26 +79,38 @@ class SmartAutoClickerService : AccessibilityService() {
         }
 
         fun configureScrollButtonUp() {
-            Log.d("CheckScroooo", "configureScrollButton: $rootInActiveWindow")
-            val scrollable = findScorllableNode(rootInActiveWindow)
-            if (scrollable != null && scrollable.isScrollable) {
-                scrollable
-                    .performAction(
-                        AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD
-                            .id
-                    )
+            if (upscroll == 0) {
+
+                Log.d("CheckScroooo", "configureScrollButton: $rootInActiveWindow")
+                val scrollable = findScorllableNode(rootInActiveWindow)
+                if (scrollable != null && scrollable.isScrollable) {
+                    scrollable
+                        .performAction(
+                            AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD
+                                .id
+                        )
+                }
+                upscroll = 5;
+            } else {
+                upscroll--;
             }
         }
 
         fun configureScrollButtonDown() {
-            Log.d("CheckScroooo", "configureScrollButton: $rootInActiveWindow")
-            val scrollable = findScorllableNode(rootInActiveWindow)
-            if (scrollable != null && scrollable.isScrollable) {
-                scrollable
-                    .performAction(
-                        AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_BACKWARD
-                            .id
-                    )
+            if (downscroll == 0) {
+                Log.d("CheckScroooo", "configureScrollButton: $rootInActiveWindow")
+                val scrollable = findScorllableNode(rootInActiveWindow)
+                if (scrollable != null && scrollable.isScrollable) {
+                    scrollable
+                        .performAction(
+                            AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_BACKWARD
+                                .id
+                        )
+                }
+                downscroll = 5;
+            }
+            else{
+                downscroll--;
             }
         }
 
@@ -157,7 +176,8 @@ class SmartAutoClickerService : AccessibilityService() {
             manager!!.createNotificationChannel(
                 NotificationChannel(
                     NOTIFICATION_CHANNEL_ID,
-                    getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_LOW
+                    getString(R.string.notification_channel_name),
+                    NotificationManager.IMPORTANCE_LOW
                 )
             )
         }
@@ -166,7 +186,14 @@ class SmartAutoClickerService : AccessibilityService() {
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Xyzmxndkvj")
             .setContentText(getString(R.string.notification_message))
-            .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            )
             .setSmallIcon(R.drawable.ic_launcher_background)
             .build()
     }
@@ -183,7 +210,11 @@ class SmartAutoClickerService : AccessibilityService() {
 //        rootOverlayController?.dump(writer, prefix) ?: writer.println("$prefix None")
     }
 
-    override fun onInterrupt() { /* Unused */ }
-    override fun onAccessibilityEvent(event: AccessibilityEvent?) { /* Unused */ }
+    override fun onInterrupt() { /* Unused */
+    }
+
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) { /* Unused */
+    }
+
 
 }

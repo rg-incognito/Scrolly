@@ -1,4 +1,4 @@
-package com.android.mediapipe;
+package com.android.mediapipe.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -1,11 +1,14 @@
-package com.android.mediapipe;
+package com.android.mediapipe.utils;
 
+import android.content.Intent;
 import android.opengl.GLES20;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.android.mediapipe.service.SmartAutoClickerService;
 import com.google.mediapipe.formats.proto.LandmarkProto;
 import com.google.mediapipe.solutioncore.ResultGlRenderer;
 import com.google.mediapipe.solutions.hands.HandsResult;
@@ -14,29 +17,31 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public  class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
-    private  final String TAG = "Hands  ResultGlRenderer";
-//    GlobalActionBarService globalActionBarService = GlobalActionBarService.getSharedInstance();
+public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
+    private final String TAG = "Hands  ResultGlRenderer";
+
+
+    //    GlobalActionBarService globalActionBarService = GlobalActionBarService.getSharedInstance();
     SmartAutoClickerService.LocalService localService =
             SmartAutoClickerService.Companion.getLocalServiceInstance();
 
-    private  final float[] LEFT_HAND_CONNECTION_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
-    private  final float[] RIGHT_HAND_CONNECTION_COLOR = new float[] {2f, 0.1f, 0.21f, 1f};
-    private  final float CONNECTION_THICKNESS = 20.0f;
-    private  final float[] LEFT_HAND_HOLLOW_CIRCLE_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
-    private  final float[] RIGHT_HAND_HOLLOW_CIRCLE_COLOR = new float[] {1f, 0.2f, 0.2f, 1f};
-    private  final float HOLLOW_CIRCLE_RADIUS = 0.01f;
-    private  final float[] LEFT_HAND_LANDMARK_COLOR = new float[] {1f, 0.2f, 0.2f, 1f};
-    private  final float[] RIGHT_HAND_LANDMARK_COLOR = new float[] {0.2f, 1f, 0.2f, 1f};
-    private  final float LANDMARK_RADIUS = 0.008f;
-    private  final int NUM_SEGMENTS = 120;
-    private  final String VERTEX_SHADER =
+    private final float[] LEFT_HAND_CONNECTION_COLOR = new float[]{0.2f, 1f, 0.2f, 1f};
+    private final float[] RIGHT_HAND_CONNECTION_COLOR = new float[]{2f, 0.1f, 0.21f, 1f};
+    private final float CONNECTION_THICKNESS = 20.0f;
+    private final float[] LEFT_HAND_HOLLOW_CIRCLE_COLOR = new float[]{0.2f, 1f, 0.2f, 1f};
+    private final float[] RIGHT_HAND_HOLLOW_CIRCLE_COLOR = new float[]{1f, 0.2f, 0.2f, 1f};
+    private final float HOLLOW_CIRCLE_RADIUS = 0.01f;
+    private final float[] LEFT_HAND_LANDMARK_COLOR = new float[]{1f, 0.2f, 0.2f, 1f};
+    private final float[] RIGHT_HAND_LANDMARK_COLOR = new float[]{0.2f, 1f, 0.2f, 1f};
+    private final float LANDMARK_RADIUS = 0.008f;
+    private final int NUM_SEGMENTS = 120;
+    private final String VERTEX_SHADER =
             "uniform mat4 uProjectionMatrix;\n"
                     + "attribute vec4 vPosition;\n"
                     + "void main() {\n"
                     + "  gl_Position = uProjectionMatrix * vPosition;\n"
                     + "}";
-    private  final String FRAGMENT_SHADER =
+    private final String FRAGMENT_SHADER =
             "precision mediump float;\n"
                     + "uniform vec4 uColor;\n"
                     + "void main() {\n"
@@ -82,9 +87,8 @@ public  class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
             boolean isLeftHand = result.multiHandedness().get(i).getLabel().equals("Left");
 
 
-
             // Drawing single finger forefinger
-            LandmarkProto.NormalizedLandmark landmark =  result.multiHandLandmarks().get(i).getLandmarkList().get(8);
+            LandmarkProto.NormalizedLandmark landmark = result.multiHandLandmarks().get(i).getLandmarkList().get(8);
             drawCircle(
                     landmark.getX(),
                     landmark.getY(),
@@ -96,7 +100,7 @@ public  class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
 
             // for middle finger
-            LandmarkProto.NormalizedLandmark landmark1 =  result.multiHandLandmarks().get(i).getLandmarkList().get(12);
+            LandmarkProto.NormalizedLandmark landmark1 = result.multiHandLandmarks().get(i).getLandmarkList().get(12);
             drawCircle(
                     landmark1.getX(),
                     landmark1.getY(),
@@ -108,7 +112,7 @@ public  class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
 
             //for thumb points
-            LandmarkProto.NormalizedLandmark landmark2 =  result.multiHandLandmarks().get(i).getLandmarkList().get(4);
+            LandmarkProto.NormalizedLandmark landmark2 = result.multiHandLandmarks().get(i).getLandmarkList().get(4);
             drawCircle(
                     landmark2.getX(),
                     landmark2.getY(),
@@ -120,43 +124,47 @@ public  class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
 
 
-            double d = Math.sqrt(Math.pow(landmark.getX()- landmark1.getX(),2)
-                    +Math.pow(landmark.getY()- landmark1.getY(),2)
-                    +Math.pow(landmark.getZ()- landmark1.getZ(),2));
-            double forfingerToThumb = Math.sqrt(Math.pow(landmark.getX()- landmark2.getX(),2)
-                    +Math.pow(landmark.getY()- landmark2.getY(),2)
-                    +Math.pow(landmark.getZ()- landmark2.getZ(),2));
+            double d = Math.sqrt(Math.pow(landmark.getX() - landmark1.getX(), 2)
+                    + Math.pow(landmark.getY() - landmark1.getY(), 2)
+                    + Math.pow(landmark.getZ() - landmark1.getZ(), 2));
+            double forfingerToThumb = Math.sqrt(Math.pow(landmark.getX() - landmark2.getX(), 2)
+                    + Math.pow(landmark.getY() - landmark2.getY(), 2)
+                    + Math.pow(landmark.getZ() - landmark2.getZ(), 2));
 
-            double middlefingerToThumb = Math.sqrt(Math.pow(landmark1.getX()- landmark2.getX(),2)
-                    +Math.pow(landmark1.getY()- landmark2.getY(),2)
-                    +Math.pow(landmark1.getZ()- landmark2.getZ(),2));
+            double middlefingerToThumb = Math.sqrt(Math.pow(landmark1.getX() - landmark2.getX(), 2)
+                    + Math.pow(landmark1.getY() - landmark2.getY(), 2)
+                    + Math.pow(landmark1.getZ() - landmark2.getZ(), 2));
 
-            localService.start();
-            if (localService != null){
-                Log.d("CheckScroll", "renderResult: "+ (d < 0.050906282163080734));
 
-                if(forfingerToThumb < 0.050906282163080734 ){
+//            localService.start();
+            if (localService != null) {
+                Log.d("CheckScroll", "renderResult: " + (d < 0.050906282163080734));
+
+                if (forfingerToThumb < 0.050906282163080734) {
                     Log.d("CheckScroll", "renderResultkkkkkkkkk: ");
 //                    globalActionBarService.configureScrollButtonUp();
                     localService.configureScrollButtonUp();
+//
+
                 }
-                if(middlefingerToThumb < 0.050906282163080734 ){
+                if (middlefingerToThumb < 0.050906282163080734) {
                     Log.d("CheckScroll", "renderResultkkkkkkkkk: ");
 //                    globalActionBarService.configureScrollButtonDown();
                     localService.configureScrollButtonDown();
+//
 
                 }
-            }
-            else{
+            } else {
 //                globalActionBarService = new GlobalActionBarService();
                 Log.d("CheckScroll", "renderResult:Error ");
             }
-            Log.d(TAG, "L1 X-"+landmark.getX()+ "L1 Y"+landmark.getY());
-            Log.d(TAG, "L2 X-"+landmark1.getX()+ "L2 Y"+landmark1.getY());
-            Log.d(TAG, "L2 X-"+landmark2.getX()+ "L2 Y"+landmark2.getY());
+            Log.d(TAG, "L1 X-" + landmark.getX() + "L1 Y" + landmark.getY());
+            Log.d(TAG, "L2 X-" + landmark1.getX() + "L2 Y" + landmark1.getY());
+            Log.d(TAG, "L2 X-" + landmark2.getX() + "L2 Y" + landmark2.getY());
 
         }
     }
+
 
     private void drawCircle(float x, float y, float[] colorArray) {
         GLES20.glUniform4fv(colorHandle, 1, colorArray, 0);
