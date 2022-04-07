@@ -53,11 +53,15 @@ class SmartAutoClickerService : AccessibilityService() {
         fun getLocalServiceInstance(): LocalService? {
             return LOCAL_SERVICE_INSTANCE
         }
+        private var isStarted: Boolean = false
+        fun getStatus(): Boolean {
+            return isStarted
+        }
+
 
     }
 
 
-    private var isStarted: Boolean = false
 
     /** Local interface providing an API for the [SmartAutoClickerService]. */
     inner class LocalService {
@@ -165,6 +169,7 @@ class SmartAutoClickerService : AccessibilityService() {
     override fun onUnbind(intent: Intent?): Boolean {
         LOCAL_SERVICE_INSTANCE?.stop()
         LOCAL_SERVICE_INSTANCE = null
+
         return super.onUnbind(intent)
     }
 

@@ -2,6 +2,7 @@ package com.android.mediapipe;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +22,8 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityManager;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 
 import com.android.mediapipe.model.App;
@@ -34,7 +37,9 @@ public class FirstPageActivity extends AppCompatActivity {
     String[] applist = new String[10];
     ArrayList<App> apps = new ArrayList<>();
     RecyclerView rc;
+    SwitchCompat serviceBtn;
     final int requestCode = 109;
+
     SmartAutoClickerService.LocalService localService;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -42,7 +47,24 @@ public class FirstPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_page);
+        serviceBtn  = findViewById(R.id.servicebtn);
         localService = SmartAutoClickerService.Companion.getLocalServiceInstance();
+    serviceBtn.setChecked(SmartAutoClickerService.Companion.getStatus());
+
+        serviceBtn.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (localService == null){
+                localService = SmartAutoClickerService.Companion.getLocalServiceInstance();
+            }
+            if(isChecked){
+                localService.start();
+                Log.d("serrr", "onCreate: Service started");
+            }
+            else {
+                localService.stop();
+                Log.d("serrr", "onCreate: Service stopped");
+
+            }
+        });
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED) {

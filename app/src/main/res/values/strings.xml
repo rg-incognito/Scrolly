@@ -3,4 +3,6 @@
     <string name="notification_channel_name">ktaccesbilit</string>
     <string name="notification_title">Mediapipe</string>
     <string name="notification_message">Service</string>
+    <string name="get_started">Get Started</string>
+    <string name="SKIP" > Skip</string>
 </resources>

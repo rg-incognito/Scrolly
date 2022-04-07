@@ -30,8 +30,8 @@ import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivitykkkkk";
-    SmartAutoClickerService.LocalService localService =
-            SmartAutoClickerService.Companion.getLocalServiceInstance();
+//    SmartAutoClickerService.LocalService localService =
+//            SmartAutoClickerService.Companion.getLocalServiceInstance();
     private Hands hands;
 
 
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        localService.start();
+//        localService.start();
         setupLiveDemoUiComponents();
 //        checkOverlayPermission();
 
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                         this,
                         HandsOptions.builder()
                                 .setStaticImageMode(false)
-                                .setMaxNumHands(2)
+                                .setMaxNumHands(1)
                                 .setRunOnGpu(RUN_ON_GPU)
                                 .build());
         hands.setErrorListener((message, e) -> Log.e(TAG, "MediaPipe Hands error:" + message));

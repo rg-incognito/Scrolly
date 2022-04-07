@@ -6,13 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".FirstPageActivity">
 
+
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
+
         android:id="@+id/appRecView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/single_app_layout"
+        android:layout_marginTop="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+         />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/servicebtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:text="Service Status"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/appRecView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

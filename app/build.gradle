@@ -47,6 +47,9 @@ dependencies {
     implementation 'com.google.mediapipe:hands:latest.release'
     implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    def lottieVersion = "3.4.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation 'com.google.android.material:material:1.6.0-beta01'
 
 
 }
