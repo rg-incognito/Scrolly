@@ -169,8 +169,13 @@ class SmartAutoClickerService : AccessibilityService() {
     override fun onUnbind(intent: Intent?): Boolean {
         LOCAL_SERVICE_INSTANCE?.stop()
         LOCAL_SERVICE_INSTANCE = null
-
+        isStarted = false
         return super.onUnbind(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isStarted = false
     }
 
 
