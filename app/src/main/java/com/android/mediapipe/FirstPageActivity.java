@@ -34,7 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FirstPageActivity extends AppCompatActivity {
-    String[] applist = new String[10];
+    ArrayList<String> applist = new ArrayList<>();
+    ArrayList<Integer> iclist = new ArrayList<>();
+    ArrayList<String> appnamelist = new ArrayList<>();
     ArrayList<App> apps = new ArrayList<>();
     RecyclerView rc;
     SwitchCompat serviceBtn;
@@ -82,12 +84,29 @@ public class FirstPageActivity extends AppCompatActivity {
         }
 
 
-        for (int i = 0; i < 10; i++) {
-            applist[i] = "com.vanced.android.youtube";
-        }
-        for (int i = 0; i < applist.length; i++) {
-            Intent launchIntent = getPackageManager().getLaunchIntentForPackage(applist[i]);
-            App a = new App(launchIntent, applist[i]);
+
+            applist.add("com.instagram.android");
+            applist.add("com.google.android.youtube");
+            applist.add("com.facebook.android");
+            applist.add("com.linkedin.android");
+            applist.add("com.twitter.android");
+
+            iclist.add(R.drawable.insta);
+            iclist.add(R.drawable.yt);
+            iclist.add(R.drawable.fb);
+            iclist.add(R.drawable.link);
+            iclist.add(R.drawable.tw);
+
+        appnamelist.add("Instagram");
+        appnamelist.add("Youtube");
+        appnamelist.add("Facebook");
+        appnamelist.add("LinkedIn");
+        appnamelist.add("Twitter");
+
+
+        for (int i = 0; i < applist.size(); i++) {
+            Intent launchIntent = getPackageManager().getLaunchIntentForPackage(applist.get(i));
+            App a = new App(launchIntent,iclist.get(i), applist.get(i),appnamelist.get(i));
             Log.d("TAGne", "onCreate: " + a);
             apps.add(a);
         }

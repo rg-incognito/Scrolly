@@ -27,6 +27,7 @@ class SmartAutoClickerService : AccessibilityService() {
     companion object {
         var upscroll = 60;
         var downscroll = 60;
+        var tap = 40
         /** The identifier for the foreground notification of this service. */
         private const val NOTIFICATION_ID = 42
 
@@ -81,12 +82,28 @@ class SmartAutoClickerService : AccessibilityService() {
             }
             return null
         }
+        private fun findScreenTapNode(root: AccessibilityNodeInfo): AccessibilityNodeInfo? {
+            val deque: Deque<AccessibilityNodeInfo> = ArrayDeque()
+            deque.add(root)
+            while (!deque.isEmpty()) {
+                val node = deque.removeLast()
+                Log.d("Nodeinfo", "findScreenTapNode: "+node.windowId+"  "+node.className)
+                if (node.actionList.contains(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK)) {
+                    return node
+                }
+                for (i in 0 until node.childCount) {
+                    deque.addLast(node.getChild(i))
+                }
+            }
+            return null
+        }
 
         fun configureScrollButtonUp() {
             if (upscroll == 0) {
 
                 Log.d("CheckScroooo", "configureScrollButton: $rootInActiveWindow")
                 val scrollable = findScorllableNode(rootInActiveWindow)
+
                 if (scrollable != null && scrollable.isScrollable) {
                     scrollable
                         .performAction(
@@ -97,6 +114,23 @@ class SmartAutoClickerService : AccessibilityService() {
                 upscroll = 5;
             } else {
                 upscroll--;
+            }
+        }
+        fun configTap(){
+            if (tap == 0) {
+
+//                Log.d("CheckScroooo", "configureScrollButton: $rootInActiveWindow")
+                val tapable = findScreenTapNode(rootInActiveWindow)
+                if (tapable != null && tapable.isClickable) {
+                    tapable
+                        .performAction(
+                            AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK
+                                .id
+                        )
+                }
+                tap = 5
+            } else {
+                tap--
             }
         }
 
@@ -111,10 +145,10 @@ class SmartAutoClickerService : AccessibilityService() {
                                 .id
                         )
                 }
-                downscroll = 5;
+                downscroll = 5
             }
             else{
-                downscroll--;
+                downscroll--
             }
         }
 

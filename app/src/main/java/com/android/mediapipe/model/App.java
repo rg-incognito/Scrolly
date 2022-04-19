@@ -6,11 +6,41 @@ import androidx.annotation.NonNull;
 
 public class App {
     public Intent i;
+    int icName;
 
-    public App(Intent i, String packageName) {
-        this.i = i;
-        this.packageName = packageName;
+    public String getAppName() {
+        return AppName;
     }
+
+    public void setAppName(String appName) {
+        AppName = appName;
+    }
+
+    public String packageName;
+
+    public App(Intent i, int icName, String packageName, String appName) {
+        this.i = i;
+        this.icName = icName;
+        this.packageName = packageName;
+        AppName = appName;
+    }
+
+    String AppName;
+
+
+
+
+
+    public int getIcName() {
+        return icName;
+    }
+
+    public void setIcName(int icName) {
+        this.icName = icName;
+    }
+
+
+
 
     @NonNull
     @Override
@@ -37,5 +67,4 @@ public class App {
         this.packageName = packageName;
     }
 
-    public String packageName;
 }

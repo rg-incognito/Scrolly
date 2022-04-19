@@ -11,13 +11,14 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
         <activity
             android:name=".onboarding.SplashScreen"
+            android:supportsPictureInPicture="false"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,13 +28,18 @@
 
         </activity>
         <activity
-            android:name=".onboarding.OnBoardingFirst"
-            android:exported="false" />
-        <activity
             android:name=".FirstPageActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:exported="true"
             android:supportsPictureInPicture="true"
+            tools:targetApi="n">
+
+        </activity>
+        <activity
+            android:name=".onboarding.AppIntroActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:exported="true"
+            android:supportsPictureInPicture="false"
             tools:targetApi="n">
 
         </activity>
@@ -57,5 +63,12 @@
                 android:resource="@xml/global_action_bar_service" />
         </service>
     </application>
+    <queries>
+        <package android:name="com.google.android.youtube" />
+        <package android:name="com.instagram.android" />
+        <package android:name="com.facebook.android" />
+        <package android:name="com.linkedin.android" />
+        <package android:name="com.twitter.android" />
+    </queries>
 
 </manifest>

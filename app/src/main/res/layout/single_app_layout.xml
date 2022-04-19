@@ -3,30 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="120dp"
     android:layout_weight="3"
-    android:padding="10dp"
-    android:orientation="horizontal">
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/applogo"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
         android:layout_weight="1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="3dp"
-        tools:layout_editor_absoluteY="2dp"
-        tools:srcCompat="@tools:sample/avatars"
+        android:scaleType="centerCrop"
+        android:src="@drawable/insta"
         android:contentDescription="App logo" />
 
     <TextView
         android:id="@+id/appname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_weight="2"
-        android:layout_width="269dp"
-        android:layout_height="128dp"
-        android:text="App Name"
+        android:fontFamily="sans-serif-condensed-light"
+        android:text="@string/app_name"
         android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         tools:layout_editor_absoluteY="60dp" />
 </LinearLayout>

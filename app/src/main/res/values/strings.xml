@@ -5,4 +5,5 @@
     <string name="notification_message">Service</string>
     <string name="get_started">Get Started</string>
     <string name="SKIP" > Skip</string>
+    <string name="service_status">Service Status     </string>
 </resources>

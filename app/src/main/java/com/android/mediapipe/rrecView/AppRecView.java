@@ -3,6 +3,7 @@ package com.android.mediapipe.rrecView;
 import android.app.Activity;
 import android.app.PictureInPictureParams;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.util.Rational;
@@ -23,7 +24,7 @@ import com.android.mediapipe.model.App;
 import java.util.ArrayList;
 
 public class AppRecView extends RecyclerView.Adapter<AppRecView.AppViewHolder> {
-    String TAG = "Adpter";
+    String TAG = "Adapter";
     ArrayList<App> applist ;
     Activity context;
 
@@ -42,15 +43,19 @@ public class AppRecView extends RecyclerView.Adapter<AppRecView.AppViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull AppViewHolder holder, int position) {
-        holder.iv.setImageResource(R.drawable.ic_launcher_background);
-        holder.tv.setText(applist.get(position).packageName);
+        holder.iv.setImageResource(applist.get(position).getIcName());
+        holder.tv.setText(applist.get(position).getAppName());
         Log.d(TAG, "onBindViewHolder: "+applist.get(position).packageName);
         holder.tv.setOnClickListener(view -> {
             enterPIP();
             context.startActivity(new Intent(context, MainActivity.class));
 
             Log.d(TAG, "onBindViewHolder: integt trigerr");
-            context.startActivity(applist.get(position).i);
+            Intent i = applist.get(position).i;
+            if (i != null){
+                context.startActivity(applist.get(position).i);
+            }
+
 
         });
 
@@ -89,4 +94,5 @@ public class AppRecView extends RecyclerView.Adapter<AppRecView.AppViewHolder> {
 
         }
     }
+
 }

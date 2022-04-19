@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.android.mediapipe.FirstPageActivity;
 import com.android.mediapipe.MainActivity;
 import com.android.mediapipe.R;
 
@@ -19,9 +21,16 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         new Handler().postDelayed(() -> {
-            Intent i = new Intent(SplashScreen.this, MainActivity.class);
-            startActivity(i);
-        },5000);
+            SharedPreferences myshredpref = getSharedPreferences("myprefrerance", 0);
+            int entry = myshredpref.getInt("entry", 0);
+            if (entry==0){
+                Intent i = new Intent(SplashScreen.this, AppIntroActivity.class);
+                startActivity(i);
+            }else{
+                Intent i = new Intent(SplashScreen.this, FirstPageActivity.class);
+                startActivity(i);
+            }
+        },3000);
 
 
 

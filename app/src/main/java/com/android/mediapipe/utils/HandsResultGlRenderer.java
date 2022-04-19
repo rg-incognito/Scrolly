@@ -88,57 +88,70 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
 
 
             // Drawing single finger forefinger
-            LandmarkProto.NormalizedLandmark landmark = result.multiHandLandmarks().get(i).getLandmarkList().get(8);
+            LandmarkProto.NormalizedLandmark forefingerlandmark = result.multiHandLandmarks().get(i).getLandmarkList().get(8);
             drawCircle(
-                    landmark.getX(),
-                    landmark.getY(),
+                    forefingerlandmark.getX(),
+                    forefingerlandmark.getY(),
                     isLeftHand ? LEFT_HAND_LANDMARK_COLOR : RIGHT_HAND_LANDMARK_COLOR);
 
             drawHollowCircle(
-                    landmark.getX(),
-                    landmark.getY(),
+                    forefingerlandmark.getX(),
+                    forefingerlandmark.getY(),
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
 
             // for middle finger
-            LandmarkProto.NormalizedLandmark landmark1 = result.multiHandLandmarks().get(i).getLandmarkList().get(12);
+            LandmarkProto.NormalizedLandmark middlelandmark = result.multiHandLandmarks().get(i).getLandmarkList().get(12);
             drawCircle(
-                    landmark1.getX(),
-                    landmark1.getY(),
+                    middlelandmark.getX(),
+                    middlelandmark.getY(),
                     isLeftHand ? LEFT_HAND_LANDMARK_COLOR : RIGHT_HAND_LANDMARK_COLOR);
 
             drawHollowCircle(
-                    landmark1.getX(),
-                    landmark1.getY(),
+                    middlelandmark.getX(),
+                    middlelandmark.getY(),
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
 
             //for thumb points
-            LandmarkProto.NormalizedLandmark landmark2 = result.multiHandLandmarks().get(i).getLandmarkList().get(4);
+            LandmarkProto.NormalizedLandmark thumbLandmark = result.multiHandLandmarks().get(i).getLandmarkList().get(4);
             drawCircle(
-                    landmark2.getX(),
-                    landmark2.getY(),
+                    thumbLandmark.getX(),
+                    thumbLandmark.getY(),
                     isLeftHand ? LEFT_HAND_LANDMARK_COLOR : RIGHT_HAND_LANDMARK_COLOR);
 
             drawHollowCircle(
-                    landmark2.getX(),
-                    landmark2.getY(),
+                    thumbLandmark.getX(),
+                    thumbLandmark.getY(),
+                    isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
+            // forefinger bottom part
+            LandmarkProto.NormalizedLandmark forefingerbottomLandmark = result.multiHandLandmarks().get(i).getLandmarkList().get(6);
+            drawCircle(
+                    forefingerbottomLandmark.getX(),
+                    forefingerbottomLandmark.getY(),
+                    isLeftHand ? LEFT_HAND_LANDMARK_COLOR : RIGHT_HAND_LANDMARK_COLOR);
+
+            drawHollowCircle(
+                    forefingerbottomLandmark.getX(),
+                    forefingerbottomLandmark.getY(),
                     isLeftHand ? LEFT_HAND_HOLLOW_CIRCLE_COLOR : RIGHT_HAND_HOLLOW_CIRCLE_COLOR);
 
 
-            double d = Math.sqrt(Math.pow(landmark.getX() - landmark1.getX(), 2)
-                    + Math.pow(landmark.getY() - landmark1.getY(), 2)
-                    + Math.pow(landmark.getZ() - landmark1.getZ(), 2));
-            double forfingerToThumb = Math.sqrt(Math.pow(landmark.getX() - landmark2.getX(), 2)
-                    + Math.pow(landmark.getY() - landmark2.getY(), 2)
-                    + Math.pow(landmark.getZ() - landmark2.getZ(), 2));
+            double forefingerAndBottom = Math.sqrt(Math.pow(forefingerlandmark.getX() - forefingerbottomLandmark.getX(), 2)
+                    + Math.pow(forefingerlandmark.getY() - forefingerbottomLandmark.getY(), 2)
+                    + Math.pow(forefingerlandmark.getZ() - forefingerbottomLandmark.getZ(), 2));
 
-            double middlefingerToThumb = Math.sqrt(Math.pow(landmark1.getX() - landmark2.getX(), 2)
-                    + Math.pow(landmark1.getY() - landmark2.getY(), 2)
-                    + Math.pow(landmark1.getZ() - landmark2.getZ(), 2));
+            double forfingerToThumb = Math.sqrt(Math.pow(forefingerlandmark.getX() - thumbLandmark.getX(), 2)
+                    + Math.pow(forefingerlandmark.getY() - thumbLandmark.getY(), 2)
+                    + Math.pow(forefingerlandmark.getZ() - thumbLandmark.getZ(), 2));
+
+            double middlefingerToThumb = Math.sqrt(Math.pow(middlelandmark.getX() - thumbLandmark.getX(), 2)
+                    + Math.pow(middlelandmark.getY() - thumbLandmark.getY(), 2)
+                    + Math.pow(middlelandmark.getZ() - thumbLandmark.getZ(), 2));
+
 
 
 //            localService.start();
             if (localService != null) {
-                Log.d("CheckScroll", "renderResult: " + (d < 0.050906282163080734));
+                Log.d("bottomlength", "renderResult: "+ forefingerAndBottom + (forefingerAndBottom < 0.05085614680255601));
 
                 if (forfingerToThumb < 0.050906282163080734) {
                     Log.d("CheckScroll", "renderResultkkkkkkkkk: ");
@@ -154,13 +167,16 @@ public class HandsResultGlRenderer implements ResultGlRenderer<HandsResult> {
 //
 
                 }
+                if (forefingerAndBottom < 0.05075614680255601){
+                    localService.configTap();
+                }
             } else {
 //                globalActionBarService = new GlobalActionBarService();
                 Log.d("CheckScroll", "renderResult:Error ");
             }
-            Log.d(TAG, "L1 X-" + landmark.getX() + "L1 Y" + landmark.getY());
-            Log.d(TAG, "L2 X-" + landmark1.getX() + "L2 Y" + landmark1.getY());
-            Log.d(TAG, "L2 X-" + landmark2.getX() + "L2 Y" + landmark2.getY());
+            Log.d(TAG, "L1 X-" + forefingerlandmark.getX() + "L1 Y" + forefingerlandmark.getY());
+            Log.d(TAG, "L2 X-" + middlelandmark.getX() + "L2 Y" + middlelandmark.getY());
+            Log.d(TAG, "L2 X-" + thumbLandmark.getX() + "L2 Y" + thumbLandmark.getY());
 
         }
     }
