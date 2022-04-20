@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,7 +47,7 @@ public class AppRecView extends RecyclerView.Adapter<AppRecView.AppViewHolder> {
         holder.iv.setImageResource(applist.get(position).getIcName());
         holder.tv.setText(applist.get(position).getAppName());
         Log.d(TAG, "onBindViewHolder: "+applist.get(position).packageName);
-        holder.tv.setOnClickListener(view -> {
+        holder.appitemholder.setOnClickListener(view -> {
             enterPIP();
             context.startActivity(new Intent(context, MainActivity.class));
 
@@ -69,10 +70,12 @@ public class AppRecView extends RecyclerView.Adapter<AppRecView.AppViewHolder> {
     public static class AppViewHolder extends RecyclerView.ViewHolder {
         TextView tv;
         ImageView iv;
+        LinearLayout appitemholder;
         public AppViewHolder(@NonNull View itemView) {
             super(itemView);
             iv= itemView.findViewById(R.id.applogo);
             tv= itemView.findViewById(R.id.appname);
+            appitemholder= itemView.findViewById(R.id.appitemholder);
         }
     }
     private void enterPIP(){

@@ -26,9 +26,11 @@ public class SplashScreen extends AppCompatActivity {
             if (entry==0){
                 Intent i = new Intent(SplashScreen.this, AppIntroActivity.class);
                 startActivity(i);
+                finish();
             }else{
                 Intent i = new Intent(SplashScreen.this, FirstPageActivity.class);
                 startActivity(i);
+                finish();
             }
         },3000);
 
