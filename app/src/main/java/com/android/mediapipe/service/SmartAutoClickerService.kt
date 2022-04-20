@@ -86,7 +86,8 @@ class SmartAutoClickerService : AccessibilityService() {
             val deque: Deque<AccessibilityNodeInfo> = ArrayDeque()
             deque.add(root)
             while (!deque.isEmpty()) {
-                val node = deque.removeLast()
+
+                val node = deque.removeFirst()
                 Log.d("Nodeinfo", "findScreenTapNode: "+node.windowId+"  "+node.className)
                 if (node.actionList.contains(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK)) {
                     return node
@@ -163,18 +164,8 @@ class SmartAutoClickerService : AccessibilityService() {
             Log.d("rrgg", "start: forground")
             startForeground(NOTIFICATION_ID, createNotification("Mediapipe"))
 
-//            detectorEngine = DetectorEngine.getDetectorEngine(this@SmartAutoClickerService).apply {
-//                startScreenRecord(this@SmartAutoClickerService, resultCode, data, scenario) { gesture ->
-//                    dispatchGesture(gesture, null, null)
-//                }
-//            }
-//
-//            rootOverlayController = MainMenu(this@SmartAutoClickerService, scenario).apply {
-//                create(::stop)
-//            }
         }
 
-        /** Stop the overlay UI and release all associated resources. */
         fun stop() {
             if (!isStarted) {
                 return
@@ -182,14 +173,6 @@ class SmartAutoClickerService : AccessibilityService() {
 
             isStarted = false
 
-//            rootOverlayController?.dismiss()
-//            rootOverlayController = null
-//
-//            detectorEngine?.let { detector ->
-//                detector.stopScreenRecord()
-//                detector.clear()
-//            }
-//            detectorEngine = null
 
             stopForeground(true)
         }
@@ -228,7 +211,7 @@ class SmartAutoClickerService : AccessibilityService() {
 
         val intent = Intent(this, FirstPageActivity::class.java)
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle("Xyzmxndkvj")
+            .setContentTitle("Gesture Service ")
             .setContentText(getString(R.string.notification_message))
             .setContentIntent(
                 PendingIntent.getActivity(
@@ -243,16 +226,6 @@ class SmartAutoClickerService : AccessibilityService() {
     }
 
 
-    override fun dump(fd: FileDescriptor?, writer: PrintWriter?, args: Array<out String>?) {
-        super.dump(fd, writer, args)
-
-        if (writer == null) return
-
-        writer.println("* UI:")
-        val prefix = "\t"
-
-//        rootOverlayController?.dump(writer, prefix) ?: writer.println("$prefix None")
-    }
 
     override fun onInterrupt() { /* Unused */
     }
